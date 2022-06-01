@@ -4,20 +4,22 @@ css: https://unpkg.com/mvp.css
 code: true
 ---
 
+Code from [https://github.com/hyper63/weather](https://github.com/hyper63/weather)
+
 <main>
 
 # Svelte101 Workshop Notes
 
 > ### What will I learn?
 >
-> * Svelte Basics
-> * How to create a Svelte Component
-> * How reactivity works
-> * How to call async functions
-> * How to create lists in Svelte
-> * How to dispatch events from one component to another
-> * How to setup and use single page routing
-> * 
+> - Svelte Basics
+> - How to create a Svelte Component
+> - How reactivity works
+> - How to call async functions
+> - How to create lists in Svelte
+> - How to dispatch events from one component to another
+> - How to setup and use single page routing
+> -
 
 ## About this workshop
 
@@ -68,13 +70,11 @@ Quick tour of a common svelte project
 - public - contains all public assets
 - src - contains your source code
 
-
 ```sh
 git checkout -b 1-template-basics
 ```
 
 ---
-
 
 ## Svelte Basics
 
@@ -87,11 +87,11 @@ Lets turn this static html into a template:
 ```html
 <script>
   const weather = {
-    city: "Charleston, SC",
-    temp: "72 &deg; F",
-    icon: "a01n",
-    description: "clear",
-  };
+    city: 'Charleston, SC',
+    temp: '72 &deg; F',
+    icon: 'a01n',
+    description: 'clear',
+  }
 </script>
 <nav>
   <div>
@@ -170,7 +170,7 @@ Lets convert the main section of the Current.svelte component into a reusable we
 ```html
 <script>
   // proptypes (we can validate props at runtime using proptypes module)
-  export let icon, description, city, temp;
+  export let icon, description, city, temp
 </script>
 <figure>
   <img alt="{description}" src="/icons/{icon}.png" />
@@ -184,13 +184,13 @@ Now our `src/views/Current.svelte` component looks like this
 
 ```html
 <script>
-  import Weather from "../components/Weather.svelte";
+  import Weather from '../components/Weather.svelte'
   const weather = {
-    city: "Charleston, SC",
-    temp: "72 &deg; F",
-    icon: "a01n",
-    description: "clear",
-  };
+    city: 'Charleston, SC',
+    temp: '72 &deg; F',
+    icon: 'a01n',
+    description: 'clear',
+  }
 </script>
 <nav>
   <div>
@@ -247,7 +247,7 @@ In order to listen for a click event, we can use the `on` directive. The `on` di
 <button on:click="{handleClick}">...</button>
 <script>
   function handleClick() {
-    console.log("click");
+    console.log('click')
   }
 </script>
 ```
@@ -258,23 +258,23 @@ This is where reactivity comes into play. We can listen to the temp and unit var
 
 ```html
 <script>
-  import { fahrenheitToCelsius, celsiusToFahrenheit } from "temperature";
+  import { fahrenheitToCelsius, celsiusToFahrenheit } from 'temperature'
 
-  import Weather from "../components/Weather.svelte";
+  import Weather from '../components/Weather.svelte'
 
-  let temp = 21.7;
-  let unit = "c";
+  let temp = 21.7
+  let unit = 'c'
 
-  $: displayTemp = `${Math.floor(temp)} &deg; ${unit.toUpperCase()}`;
+  $: displayTemp = `${Math.floor(temp)} &deg; ${unit.toUpperCase()}`
 
   function convertToF() {
-    temp = celsiusToFahrenheit(temp);
-    unit = "f";
+    temp = celsiusToFahrenheit(temp)
+    unit = 'f'
   }
 
   function convertToC() {
-    temp = fahrenheitToCelsius(temp);
-    unit = "c";
+    temp = fahrenheitToCelsius(temp)
+    unit = 'c'
   }
 </script>
 <nav>
@@ -287,7 +287,6 @@ This is where reactivity comes into play. We can listen to the temp and unit var
 </nav>
 <main>{@html displayTemp} ...</main>
 ```
-
 
 <article><aside>
 
@@ -327,11 +326,11 @@ Lets use the `async` library in our `lib` folder to call the weather api.
 
 ```html
 <script>
-  import { getJSON } from "../lib/async.js";
+  import { getJSON } from '../lib/async.js'
 
-  getJSON("/api/weather?city=charleston,sc&country=us").then(
+  getJSON('/api/weather?city=charleston,sc&country=us').then(
     console.log.bind(console)
-  );
+  )
 </script>
 ```
 
@@ -341,26 +340,26 @@ Using the `onMount` function from svelte will let us handle async requests and a
 
 ```html
 <script>
-  import { getJSON } from "../lib/async.js";
-  import Weather from "../components/Weather.svelte";
-  import { onMount } from "svelte";
+  import { getJSON } from '../lib/async.js'
+  import Weather from '../components/Weather.svelte'
+  import { onMount } from 'svelte'
 
   let weather = {
-    city: "Charleston, SC",
-    temp: "72 &deg; F",
-    icon: "a01n",
-    description: "clear",
-  };
+    city: 'Charleston, SC',
+    temp: '72 &deg; F',
+    icon: 'a01n',
+    description: 'clear',
+  }
 
   onMount(async () => {
-    const results = await getJSON("/api/weather?city=charleston,sc&country=us");
+    const results = await getJSON('/api/weather?city=charleston,sc&country=us')
     weather = {
       temp: `${results.temp} &deg; C`,
       icon: results.weather.icon,
       description: results.weather.description,
       city: `${results.city_name} ${results.state_code}`,
-    };
-  });
+    }
+  })
 </script>
 <nav>
   <div>
@@ -391,18 +390,18 @@ Or we could create an async function and use the `{#await}` command.
 
 ```html
 <script>
-  import { getJSON } from "../lib/async.js";
-  import Weather from "../components/Weather.svelte";
+  import { getJSON } from '../lib/async.js'
+  import Weather from '../components/Weather.svelte'
 
   function getWeather() {
-    return getJSON("/api/weather?city=charleston,sc&country=us").then(
+    return getJSON('/api/weather?city=charleston,sc&country=us').then(
       (results) => ({
         temp: `${results.temp} &deg; C`,
         icon: results.weather.icon,
         description: results.weather.description,
         city: `${results.city_name} ${results.state_code}`,
       })
-    );
+    )
   }
 </script>
 <nav>
@@ -446,7 +445,7 @@ git checkout -b 5-events
 
 ### Summary
 
-In this lesson, we learned about two ways to handle async requests from components at the point of loading. 
+In this lesson, we learned about two ways to handle async requests from components at the point of loading.
 
 ---
 
@@ -468,14 +467,14 @@ From the click event, we need to route to the current view with the correct city
 
 ```html
 <script>
-  import CityCard from "../components/CityCard.svelte";
+  import CityCard from '../components/CityCard.svelte'
 
-  let cities = ["Charleston, SC", "New york, NY", "San Francisco, CA"];
+  let cities = ['Charleston, SC', 'New york, NY', 'San Francisco, CA']
 
   function changeCurrentCity(city) {
     return () => {
-      console.log("city", city);
-    };
+      console.log('city', city)
+    }
   }
 </script>
 <nav>
@@ -503,12 +502,12 @@ From the click event, we need to route to the current view with the correct city
 
 ```html
 <script>
-  import { createEventDispatcher } from "svelte";
-  export let city;
-  const dispatch = createEventDispatcher();
+  import { createEventDispatcher } from 'svelte'
+  export let city
+  const dispatch = createEventDispatcher()
 
   function handleClick() {
-    dispatch("click", { city });
+    dispatch('click', { city })
   }
 </script>
 <aside on:click="{handleClick}">
@@ -551,18 +550,16 @@ For routing, we are going to use pagejs a framework agnostic routing component m
 
 ```html
 <script>
-  import {Route} from "tinro";
+  import { Route } from 'tinro'
 
-  import Current from "./views/Current.svelte";
-  import Favorites from "./views/Favorites.svelte";
-
+  import Current from './views/Current.svelte'
+  import Favorites from './views/Favorites.svelte'
 </script>
 
 <Route path="/"><Current /></Route>
 <Route path="/favorites/*">
   <Route path="/"><Favorites /></Route>
 </Route>
-
 ```
 
 `src/views/Current.svelte`
@@ -575,16 +572,16 @@ Use page to navigate to Current
 
 ```html
 <script>
-  import CityCard from "../components/CityCard.svelte";
-  import { router } from 'tinro';
+  import CityCard from '../components/CityCard.svelte'
+  import { router } from 'tinro'
 
-  let cities = ["Charleston, SC", "New york, NY", "San Francisco, CA"];
+  let cities = ['Charleston, SC', 'New york, NY', 'San Francisco, CA']
 
   function changeCurrentCity(city) {
     return () => {
       // set current city...then
-      router.goto("/");
-    };
+      router.goto('/')
+    }
   }
 </script>
 <nav>
@@ -622,7 +619,7 @@ git checkout -b 7-stores
 
 ### Summary
 
-In this section, we learned how to use `tinro` router to navigate from one component to another component both declaratively and programatically. There are more features to check out with `tinro` - https://github.com/AlexxNB/tinro 
+In this section, we learned how to use `tinro` router to navigate from one component to another component both declaratively and programatically. There are more features to check out with `tinro` - https://github.com/AlexxNB/tinro
 
 ---
 
@@ -635,37 +632,37 @@ https://svelte.dev/docs#svelte_store
 `src/store.js`
 
 ```js
-import { writable } from "svelte/store";
+import { writable } from 'svelte/store'
 
-export const store = writable({ current: "Charleston, SC" });
+export const store = writable({ current: 'Charleston, SC' })
 
 export const dispatch = (action) =>
   new Promise((resolve) =>
     store.update((state) => {
-      resolve();
-      if (action.type === "SET_CURRENT") {
-        return { ...state, current: action.payload };
+      resolve()
+      if (action.type === 'SET_CURRENT') {
+        return { ...state, current: action.payload }
       }
-      return state;
+      return state
     })
-  );
+  )
 ```
 
 `src/views/Favorites.svelte`
 
 ```html
 <script>
-  import { dispatch } from "../store";
-  import CityCard from "../components/CityCard.svelte";
-  import page from "page";
+  import { dispatch } from '../store'
+  import CityCard from '../components/CityCard.svelte'
+  import page from 'page'
 
-  let cities = ["Charleston, SC", "New york, NY", "San Francisco, CA"];
+  let cities = ['Charleston, SC', 'New york, NY', 'San Francisco, CA']
 
   function changeCurrentCity(city) {
     return () => {
       // set current city...then
-      dispatch({ type: "SET_CURRENT", payload: city }).then(() => page("/"));
-    };
+      dispatch({ type: 'SET_CURRENT', payload: city }).then(() => page('/'))
+    }
   }
 </script>
 <nav>
@@ -693,19 +690,19 @@ export const dispatch = (action) =>
 
 ```html
 <script>
-  import { getJSON } from "../lib/async.js";
-  import { fahrenheitToCelsius, celsiusToFahrenheit } from "temperature";
-  import { store } from "../store";
+  import { getJSON } from '../lib/async.js'
+  import { fahrenheitToCelsius, celsiusToFahrenheit } from 'temperature'
+  import { store } from '../store'
 
-  import Weather from "../components/Weather.svelte";
+  import Weather from '../components/Weather.svelte'
 
-  let temp = 21.7;
-  let unit = "c";
+  let temp = 21.7
+  let unit = 'c'
 
-  $: displayTemp = `${Math.floor(temp)} &deg; ${unit.toUpperCase()}`;
+  $: displayTemp = `${Math.floor(temp)} &deg; ${unit.toUpperCase()}`
 
   function getWeather() {
-    const current = $store.current.toLowerCase().replace(", ", ",");
+    const current = $store.current.toLowerCase().replace(', ', ',')
     return getJSON(`/api/weather?city=${current}&country=us`).then(
       (results) => ({
         temp: `${results.temp} &deg; C`,
@@ -713,17 +710,17 @@ export const dispatch = (action) =>
         description: results.weather.description,
         city: `${results.city_name} ${results.state_code}`,
       })
-    );
+    )
   }
 
   function convertToF() {
-    temp = celsiusToFahrenheit(temp);
-    unit = "f";
+    temp = celsiusToFahrenheit(temp)
+    unit = 'f'
   }
 
   function convertToC() {
-    temp = fahrenheitToCelsius(temp);
-    unit = "c";
+    temp = fahrenheitToCelsius(temp)
+    unit = 'c'
   }
 </script>
 <nav>
@@ -779,20 +776,20 @@ https://svelte.dev/docs#svelte_transition
 
 ```html
 <script>
-  import { getJSON } from "../lib/async.js";
-  import { fahrenheitToCelsius, celsiusToFahrenheit } from "temperature";
-  import { store } from "../store";
-  import { fade, blur } from "svelte/transition";
+  import { getJSON } from '../lib/async.js'
+  import { fahrenheitToCelsius, celsiusToFahrenheit } from 'temperature'
+  import { store } from '../store'
+  import { fade, blur } from 'svelte/transition'
 
-  import Weather from "../components/Weather.svelte";
+  import Weather from '../components/Weather.svelte'
 
-  let temp = 21.7;
-  let unit = "c";
+  let temp = 21.7
+  let unit = 'c'
 
-  $: displayTemp = `${Math.floor(temp)} &deg; ${unit.toUpperCase()}`;
+  $: displayTemp = `${Math.floor(temp)} &deg; ${unit.toUpperCase()}`
 
   function getWeather() {
-    const current = $store.current.toLowerCase().replace(", ", ",");
+    const current = $store.current.toLowerCase().replace(', ', ',')
     return getJSON(`/api/weather?city=${current}&country=us`).then(
       (results) => ({
         temp: `${results.temp} &deg; C`,
@@ -800,17 +797,17 @@ https://svelte.dev/docs#svelte_transition
         description: results.weather.description,
         city: `${results.city_name} ${results.state_code}`,
       })
-    );
+    )
   }
 
   function convertToF() {
-    temp = celsiusToFahrenheit(temp);
-    unit = "f";
+    temp = celsiusToFahrenheit(temp)
+    unit = 'f'
   }
 
   function convertToC() {
-    temp = fahrenheitToCelsius(temp);
-    unit = "c";
+    temp = fahrenheitToCelsius(temp)
+    unit = 'c'
   }
 </script>
 <nav>
@@ -913,27 +910,27 @@ https://svelte.dev/repl/e94473c00c5c422fa736ba60a2ca0e61?version=3.26.0
 
 ```html
 <script>
-  import { createEventDispatcher } from "svelte";
-  import { scale } from "svelte/transition";
-  export let open = false;
-  const dispatch = createEventDispatcher();
+  import { createEventDispatcher } from 'svelte'
+  import { scale } from 'svelte/transition'
+  export let open = false
+  const dispatch = createEventDispatcher()
 
   function handleCloseClick() {
-    dispatch("close");
+    dispatch('close')
   }
 
   // action
 
   function modalAction(node) {
-    let fns = [];
-    if (document.body.style.overflow !== "hidden") {
-      const original = document.body.style.overflow;
-      document.body.style.overflow = "hidden";
-      fns = [...fns, () => (document.body.style.overflow = original)];
+    let fns = []
+    if (document.body.style.overflow !== 'hidden') {
+      const original = document.body.style.overflow
+      document.body.style.overflow = 'hidden'
+      fns = [...fns, () => (document.body.style.overflow = original)]
     }
     return {
       destroy: () => fns.map((fn) => fn()),
-    };
+    }
   }
 </script>
 {#if open}
@@ -971,13 +968,13 @@ https://svelte.dev/repl/e94473c00c5c422fa736ba60a2ca0e61?version=3.26.0
 
 ```html
 <script>
-  import { createEventDispatcher } from "svelte";
-  const dispatch = createEventDispatcher();
-  let city;
+  import { createEventDispatcher } from 'svelte'
+  const dispatch = createEventDispatcher()
+  let city
 
   function handleSubmit() {
-    dispatch("add", { city });
-    city = "";
+    dispatch('add', { city })
+    city = ''
   }
 </script>
 <main>
@@ -1077,8 +1074,7 @@ git checkout -b 10-testing
 
 ### Summary
 
-In this section, we introduced slots and actions. With slots you can add content to your component adding markup within the element tags. With actions, you can hook into the browser event system to directly manage elements, as you would with jquery. Actions are great for interacting with third party javascript modules, like d3 and map components. 
-
+In this section, we introduced slots and actions. With slots you can add content to your component adding markup within the element tags. With actions, you can hook into the browser event system to directly manage elements, as you would with jquery. Actions are great for interacting with third party javascript modules, like d3 and map components.
 
 ---
 
@@ -1112,9 +1108,9 @@ Open an index.js file in the cypress/plugins directory and edit the following fu
 
 ```js
 module.exports = (on) => {
-  const filePreprocessor = require("@bahmutov/cy-rollup");
-  on("file:preprocessor", filePreprocessor());
-};
+  const filePreprocessor = require('@bahmutov/cy-rollup')
+  on('file:preprocessor', filePreprocessor())
+}
 ```
 
 This code will give cypress the information it needs to compile the svelte component
@@ -1142,38 +1138,38 @@ In our src folder, lets create a test for the App component.
 create a new file src/views/Add.spec.js
 
 ```js
-import Add from "./Add.svelte";
-import { mount } from "cypress-svelte-unit-test";
+import Add from './Add.svelte'
+import { mount } from 'cypress-svelte-unit-test'
 
-it("add city using form", () => {
+it('add city using form', () => {
   mount(Add, {
     callbacks: {
-      add: cy.stub().as("add"),
+      add: cy.stub().as('add'),
     },
-  });
-  cy.get("input#city").type("Boston, MA");
-  cy.get("button#add-btn").click();
-  cy.get("@add")
-    .should("be.called")
-    .its("firstCall.args.0.detail")
-    .should("deep.equal", { city: "Boston, MA" });
-});
+  })
+  cy.get('input#city').type('Boston, MA')
+  cy.get('button#add-btn').click()
+  cy.get('@add')
+    .should('be.called')
+    .its('firstCall.args.0.detail')
+    .should('deep.equal', { city: 'Boston, MA' })
+})
 ```
 
 `src/views/Add.svelte`
 
 ```html
 <script>
-  import { createEventDispatcher } from "svelte";
-  const dispatch = createEventDispatcher();
+  import { createEventDispatcher } from 'svelte'
+  const dispatch = createEventDispatcher()
 
-  let city = "";
-  let selected = "";
+  let city = ''
+  let selected = ''
 
   function submitCity() {
-    dispatch("add", { city });
-    selected = city;
-    city = "";
+    dispatch('add', { city })
+    selected = city
+    city = ''
   }
 </script>
 <main>
@@ -1223,10 +1219,9 @@ If everything went as planned you should see a print out showing App.spec.js pas
 
 https://docs.cypress.io/guides/overview/why-cypress.html#In-a-nutshell
 
-
 ### Summary
 
-This is a very short introduction to cypress, cypress is a powerful tool for testing Javascript using different styles and patterns. Cypress gives you a clean way to TDD with Svelte. 
+This is a very short introduction to cypress, cypress is a powerful tool for testing Javascript using different styles and patterns. Cypress gives you a clean way to TDD with Svelte.
 
 ---
 
@@ -1234,13 +1229,13 @@ This is a very short introduction to cypress, cypress is a powerful tool for tes
 
 This ends the workshop, but you do not have to end the journey here, you can take this application to greater lengths:
 
-* Add a dynamic background, based on the weather
-* Store your favorite cities on localStorage
-* Show wind and tidal information from weatherbit
-* Convert web app to mobile app using capacitorjs
-* What else?
+- Add a dynamic background, based on the weather
+- Store your favorite cities on localStorage
+- Show wind and tidal information from weatherbit
+- Convert web app to mobile app using capacitorjs
+- What else?
 
-> This workshop is designed to continue to practice and re-enforce component architecture concepts. So feel free to go through the workshop as a tutorial a couple of times to get some refinement. Then, try to create the app with no direction from the guide, see what you remember, and see what you don't, then refer to complete the parts you are not familar with, then repeat. 
+> This workshop is designed to continue to practice and re-enforce component architecture concepts. So feel free to go through the workshop as a tutorial a couple of times to get some refinement. Then, try to create the app with no direction from the guide, see what you remember, and see what you don't, then refer to complete the parts you are not familar with, then repeat.
 
 ### Thank you!
 
