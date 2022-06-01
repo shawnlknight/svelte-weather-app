@@ -1,18 +1,28 @@
+<script>
+  import { dispatch } from '../store.js'
+  import { router } from 'tinro'
+  import CityCard from '../components/CityCard.svelte'
+  import page from "page"
+
+  let cities = ['Charleston, SC', 'New York, NY', 'San Francisco, CA']
+
+  function changeCurrentCity(city) {
+    return () => {
+      console.log('city', city)
+      router.goto("/")
+      dispatch({ type: "SET_CURRENT", payload: city }).then(() => page("/"));
+    }
+  }
+</script>
 <nav>
   <div>Favorites</div>
   <a href="">Add</a>
 </nav>
 <main>
   <section>
-    <aside>
-      <h3>Charleston, SC</h3>
-    </aside>
-    <aside>
-      <h3>New york, NY</h3>
-    </aside>
-    <aside>
-      <h3>San Francisco, CA</h3>
-    </aside>
+    {#each cities as city}
+    <CityCard {city} on:click={changeCurrentCity(city)} />
+    {/each}
   </section>
 </main>
 <style>

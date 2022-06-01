@@ -1,7 +1,7 @@
 <script>
   import { fahrenheitToCelsius, celsiusToFahrenheit } from "temperature";
   import { getJSON } from "../lib/async.js";
-  import { onMount } from "svelte"
+  import { store } from "../store";
   import Weather from "../components/Weather.svelte";
 
   getJSON("/api/weather?city=charleston,sc&country=us").then(
@@ -28,7 +28,8 @@
   }
 
   const getWeather = (async () => {
-    const results = await getJSON("/api/weather?city=portland,or&country=us");
+    const current = $store.current.toLowerCase().replace(", ", ",");
+    const results = await getJSON(`/api/weather?city=${current},or&country=us`);
     return {
       temp: `${results.temp} &deg; C`,
       icon: results.weather.icon,
@@ -44,7 +45,7 @@
     |
     <a href="#" on:click|preventDefault="{convertToC}">C</a>
   </div>
-  <a href="">Favorites</a>
+  <a href="/favorites">Favorites</a>
 </nav>
 <main>
   <div>{@html displayTemp}</div>

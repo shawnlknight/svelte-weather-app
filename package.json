@@ -21,6 +21,7 @@
     "express": "^4.17.1",
     "json-server": "^0.16.1",
     "node-fetch": "^2.6.1",
+    "page": "^1.11.6",
     "sirv-cli": "^1.0.0",
     "temperature": "^1.0.3"
   }
