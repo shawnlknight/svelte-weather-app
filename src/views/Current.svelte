@@ -2,6 +2,8 @@
   import { fahrenheitToCelsius, celsiusToFahrenheit } from "temperature";
   import { getJSON } from "../lib/async.js";
   import { store } from "../store";
+  import { fade, blur } from "svelte/transition";
+
   import Weather from "../components/Weather.svelte";
 
   getJSON("/api/weather?city=charleston,sc&country=us").then(
@@ -47,7 +49,7 @@
   </div>
   <a href="/favorites">Favorites</a>
 </nav>
-<main>
+<main transition:fade="{{duration: 1000}}">
   <div>{@html displayTemp}</div>
   {#await getWeather()} 
     Loading... 

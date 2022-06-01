@@ -1,4 +1,5 @@
 <script>
+  import { blur } from 'svelte/transition'
   import { dispatch } from '../store.js'
   import { router } from 'tinro'
   import CityCard from '../components/CityCard.svelte'
@@ -8,23 +9,24 @@
 
   function changeCurrentCity(city) {
     return () => {
-      console.log('city', city)
       router.goto("/")
       dispatch({ type: "SET_CURRENT", payload: city }).then(() => page("/"));
     }
   }
 </script>
-<nav>
-  <div>Favorites</div>
-  <a href="">Add</a>
-</nav>
-<main>
-  <section>
-    {#each cities as city}
-    <CityCard {city} on:click={changeCurrentCity(city)} />
-    {/each}
-  </section>
-</main>
+<div in:blur={{delay: 1000, duration: 1000}}>
+  <nav>
+    <div>Favorites</div>
+    <a href="">Add</a>
+  </nav>
+  <main>
+    <section>
+      {#each cities as city}
+      <CityCard {city} on:click={changeCurrentCity(city)} />
+      {/each}
+    </section>
+  </main>
+</div>
 <style>
  nav {
    height: 24px;
