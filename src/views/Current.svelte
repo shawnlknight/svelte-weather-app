@@ -49,7 +49,7 @@
   </div>
   <a href="/favorites">Favorites</a>
 </nav>
-<main transition:fade="{{duration: 1000}}">
+<main transition:fade={{duration: 1000}}>
   <div>{@html displayTemp}</div>
   {#await getWeather()} 
     Loading... 
